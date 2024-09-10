@@ -45,13 +45,19 @@ jobs:
           ls -laR
           
           USER_NAME="helmtoken"
+
+          echo 'Getting credentials'
           
           PASSWORD=$(az acr token create -n $USER_NAME \
                             -r ${{ secrets.AZURE_CONTAINER_REGISTRY }} \
                             --scope-map _repositories_admin \
                             --only-show-errors \
                             --query "credentials.passwords[0].value" -o tsv)
+          echo 'logic to Acr'
+
+          az acr login -n ${{ secrets.AZURE_CONTAINER_REGISTRY }}
           
+          echo 'Login to Helm'
           
           helm registry login ${{ secrets.AZURE_CONTAINER_REGISTRY }} \
               --username $USER_NAME \
