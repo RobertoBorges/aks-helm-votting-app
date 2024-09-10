@@ -6,10 +6,8 @@ name: Build-Docker-Images
 # documentation.
 
 on:
-  push:
+  workflow_run:
     branches: [ "main" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
 
