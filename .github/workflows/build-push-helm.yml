@@ -1,6 +1,8 @@
 name: Build and Push Helm to registry
 
 on:
+  push:
+    branches: [ "main "]
   workflow_dispatch:
     inputs:
       logLevel:
@@ -35,4 +37,26 @@ jobs:
       - name: Build and push image to ACR
         run: |
           cd ./azure-vote-front
-          az acr build --image ${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ secrets.CONTAINER_NAME }}:${{ github.sha }} --registry ${{ secrets.AZURE_CONTAINER_REGISTRY }} -g ${{ secrets.RESOURCE_GROUP }} .
+          
+          helm dependency update .
+
+          helm package . -d ./charts
+
+          ls -laR
+          
+          USER_NAME="helmtoken"
+          
+          PASSWORD=$(az acr token create -n $USER_NAME \
+                            -r ${{ secrets.AZURE_CONTAINER_REGISTRY }} \
+                            --scope-map _repositories_admin \
+                            --only-show-errors \
+                            --query "credentials.passwords[0].value" -o tsv)
+          
+          
+          helm registry login ${{ secrets.AZURE_CONTAINER_REGISTRY }} \
+              --username $USER_NAME \
+              --password $PASSWORD
+          
+          helm push ./azure-vote-front/charts/azure-vote-front-0.1.0.tgz  oci://$(containerRegistry)/helm
+          
+          helm push ./azure-vote-front/charts/redis-17.3.17.tgz oci://$(containerRegistry)/helm
