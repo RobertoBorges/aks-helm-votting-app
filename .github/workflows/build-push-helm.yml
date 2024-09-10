@@ -49,6 +49,6 @@ jobs:
           
           echo 'Push to Helm'
           
-          helm push ./azure-vote-front/charts/azure-vote-front-0.1.0.tgz  oci://${{ secrets.AZURE_CONTAINER_REGISTRY }}/helm
+          helm push ./charts/azure-vote-front-0.1.0.tgz  oci://${{ secrets.AZURE_CONTAINER_REGISTRY }}/helm
           
-          helm push ./azure-vote-front/charts/redis-17.3.17.tgz oci://${{ secrets.AZURE_CONTAINER_REGISTRY }}/helm
+          helm push ./charts/redis-17.3.17.tgz oci://${{ secrets.AZURE_CONTAINER_REGISTRY }}/helm
