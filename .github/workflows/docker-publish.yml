@@ -6,8 +6,17 @@ name: Build-Docker-Images
 # documentation.
 
 on:
-  workflow_run:
-    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
   pull_request:
     branches: [ "main" ]
 
