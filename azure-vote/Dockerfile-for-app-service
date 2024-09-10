@@ -1,0 +1,15 @@
+FROM tiangolo/uwsgi-nginx-flask:python3.6
+
+# Copy application files to the appropriate directory
+ADD /azure-vote /app
+
+# Install Redis library for Python
+RUN pip install redis
+
+# Set the environment variable for the port
+ENV PORT 80
+
+# Expose the necessary ports
+EXPOSE 80
+
+# Use the default CMD provided by the tiangolo/uwsgi-nginx-flask image
